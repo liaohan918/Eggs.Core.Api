@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="Eggs.Core.Api.FrameWork.Entity\Eggs.Core.Api.FrameWork.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Eggs.Core.Api.FrameWork.cs</LastGenOutput>
+    </None>
+    <None Update="Eggs.Core.Api.FrameWork.IRepository\Eggs.Core.Api.FrameWork.IRepository.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Eggs.Core.Api.FrameWork.IRepository.cs</LastGenOutput>
+    </None>
+    <None Update="Eggs.Core.Api.FrameWork.IServices\Eggs.Core.Api.FrameWork.IServices.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Eggs.Core.Api.FrameWork.IServices.cs</LastGenOutput>
+    </None>
+    <None Update="Eggs.Core.Api.FrameWork.Repository\Eggs.Core.Api.FrameWork.Repository.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Eggs.Core.Api.FrameWork.Repository.cs</LastGenOutput>
+    </None>
+    <None Update="Eggs.Core.Api.FrameWork.Services\Eggs.Core.Api.FrameWork.Services.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Eggs.Core.Api.FrameWork.Services.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Eggs.Core.Api.FrameWork.IRepository\Eggs.Core.Api.FrameWork.IRepository.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Eggs.Core.Api.FrameWork.IRepository.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Eggs.Core.Api.FrameWork.IServices\Eggs.Core.Api.FrameWork.IServices.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Eggs.Core.Api.FrameWork.IServices.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Eggs.Core.Api.FrameWork.Repository\Eggs.Core.Api.FrameWork.Repository.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Eggs.Core.Api.FrameWork.Repository.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Eggs.Core.Api.FrameWork.Services\Eggs.Core.Api.FrameWork.Services.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Eggs.Core.Api.FrameWork.Services.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>
