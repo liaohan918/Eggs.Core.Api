@@ -16,14 +16,29 @@
             <param name="blogArticleServices"></param>
             <param name="logger"></param>
         </member>
-        <member name="M:Eggs.Core.Api.Controllers.BlogController.Get(System.Int32,System.Int32,System.String,System.String)">
+        <member name="M:Eggs.Core.Api.Controllers.BlogController.Get(System.Int32,System.Int32,System.Int32,System.String,System.String)">
             <summary>
             获取博客列表【无权限】
             </summary>
             <param name="id"></param>
             <param name="page"></param>
+            <param name="pageSize"></param>
             <param name="bcategory"></param>
             <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Eggs.Core.Api.Controllers.BlogController.GetBlogsByTypes(System.String)">
+            <summary>
+            获得博客列表
+            </summary>
+            <param name="bcategory">博客类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:Eggs.Core.Api.Controllers.BlogController.GetBlogsPageCountByTypes(System.String)">
+            <summary>
+            根据博客类型获得总数
+            </summary>
+            <param name="bcategory">博客类型</param>
             <returns></returns>
         </member>
         <member name="M:Eggs.Core.Api.Controllers.BlogController.Get(System.Int32)">

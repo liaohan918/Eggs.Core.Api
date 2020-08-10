@@ -15,7 +15,7 @@ namespace Eggs.Core.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ImgController : Controller
     {
         // GET: api/Download
@@ -128,6 +128,13 @@ namespace Eggs.Core.Api.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public string test()
+        {
+            return "success";
         }
     }
 

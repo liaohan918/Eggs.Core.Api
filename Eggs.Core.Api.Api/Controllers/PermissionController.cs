@@ -454,7 +454,8 @@ namespace Eggs.Core.Api.Controllers
                 var pername = permissions.FirstOrDefault(d => d.IsButton && d.Id == item)?.Name;
                 if (!string.IsNullOrEmpty(pername))
                 {
-                    assignbtns.Add(pername + "_" + item);
+                    //assignbtns.Add(pername + "_" + item);
+                    assignbtns.Add(item.ObjToString());
                 }
             }
 

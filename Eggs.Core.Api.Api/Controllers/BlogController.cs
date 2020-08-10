@@ -44,6 +44,7 @@ namespace Eggs.Core.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <param name="page"></param>
+        /// <param name="pageSize"></param>
         /// <param name="bcategory"></param>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -51,17 +52,23 @@ namespace Eggs.Core.Api.Controllers
         [AllowAnonymous]
         //[ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         //[ResponseCache(Duration = 600)]
-        public async Task<MessageModel<PageModel<BlogArticle>>> Get(int id, int page = 1, string bcategory = "技术博文", string key = "")
+        public async Task<MessageModel<PageModel<BlogArticle>>> Get(int id, int page = 1, int pageSize = 10, string bcategory = "技术博文", string key = "")
         {
-            int intPageSize = 6;
             if (string.IsNullOrEmpty(key) || string.IsNullOrWhiteSpace(key))
             {
                 key = "";
             }
+            Expression<Func<BlogArticle, bool>> whereExpression;
+            if (!string.IsNullOrWhiteSpace(bcategory))
+            {
+                whereExpression = a => (a.bcategory == bcategory && a.IsDeleted == false) && ((a.btitle != null && a.btitle.Contains(key)) || (a.bcontent != null && a.bcontent.Contains(key)));
+            }
+            else
+            {
+                whereExpression = a => (a.IsDeleted == false) && ((a.btitle != null && a.btitle.Contains(key)) || (a.bcontent != null && a.bcontent.Contains(key)));
+            }
 
-            Expression<Func<BlogArticle, bool>> whereExpression = a => (a.bcategory == bcategory && a.IsDeleted == false) && ((a.btitle != null && a.btitle.Contains(key)) || (a.bcontent != null && a.bcontent.Contains(key)));
-
-            var pageModelBlog = await _blogArticleServices.QueryPage(whereExpression, page, intPageSize, " bID desc ");
+            var pageModelBlog = await _blogArticleServices.QueryPage(whereExpression, page, pageSize, " bID desc ");
 
             using (MiniProfiler.Current.Step("获取成功后，开始处理最终数据"))
             {
@@ -93,6 +100,66 @@ namespace Eggs.Core.Api.Controllers
             };
         }
 
+        /// <summary>
+        /// 获得博客列表
+        /// </summary>
+        /// <param name="bcategory">博客类型</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GetBlogsByTypes")]
+        [AllowAnonymous]
+        public async Task<MessageModel<List<BlogArticle>>> GetBlogsByTypes(string bcategory = "")
+        {
+            Expression<Func<BlogArticle, bool>> whereExpression;
+            if (string.IsNullOrWhiteSpace(bcategory))
+            {
+                whereExpression = a => (a.IsDeleted == false && a.bcontent != null);
+            }
+            else
+            {
+                whereExpression = a => (a.bcategory == bcategory && a.IsDeleted == false && a.bcontent != null);
+            }
+
+            var pageModelBlog = await _blogArticleServices.Query(whereExpression);
+
+            return new MessageModel<List<BlogArticle>>()
+            {
+                success = true,
+                msg = "获取成功",
+                response = pageModelBlog
+            };
+        }
+
+        /// <summary>
+        /// 根据博客类型获得总数
+        /// </summary>
+        /// <param name="bcategory">博客类型</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GetBlogsPageCountByTypes")]
+        [AllowAnonymous]
+        public async Task<MessageModel<int>> GetBlogsPageCountByTypes(string bcategory = "")
+        {
+            Expression<Func<BlogArticle, bool>> whereExpression;
+            if (string.IsNullOrWhiteSpace(bcategory))
+            {
+                whereExpression = a => (a.IsDeleted == false && a.bcontent != null);
+            }
+            else
+            {
+                whereExpression = a => (a.bcategory == bcategory && a.IsDeleted == false && a.bcontent != null);
+            }
+
+            var pageModelBlog = await _blogArticleServices.Query(whereExpression);
+
+            return new MessageModel<int>()
+            {
+                success = true,
+                msg = "获取成功",
+                response = pageModelBlog.Count
+            };
+        }
+
 
         /// <summary>
         /// 获取博客详情
@@ -100,7 +167,8 @@ namespace Eggs.Core.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        [Authorize]
+        //[Authorize]
+        [AllowAnonymous]
         public async Task<MessageModel<BlogViewModels>> Get(int id)
         {
             return new MessageModel<BlogViewModels>()
@@ -220,7 +288,7 @@ namespace Eggs.Core.Api.Controllers
             blogArticle.bCreateTime = DateTime.Now;
             blogArticle.bUpdateTime = DateTime.Now;
             blogArticle.IsDeleted = false;
-            blogArticle.bcategory = "技术博文";
+            //blogArticle.bcategory = "技术博文";
 
             var id = (await _blogArticleServices.Add(blogArticle));
             data.success = id > 0;
