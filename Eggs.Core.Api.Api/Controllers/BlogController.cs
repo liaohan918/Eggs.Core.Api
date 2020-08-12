@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Eggs.Core.Api.Common.Helper;
@@ -52,24 +53,32 @@ namespace Eggs.Core.Api.Controllers
         [AllowAnonymous]
         //[ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         //[ResponseCache(Duration = 600)]
-        public async Task<MessageModel<PageModel<BlogArticle>>> Get(int id, int page = 1, int pageSize = 10, string bcategory = "技术博文", string key = "")
+        public async Task<MessageModel<PageModel<BlogArticle>>> Get(int id, int page = 1, int pageSize = 10, string bcategory = "", string key = "")
         {
             if (string.IsNullOrEmpty(key) || string.IsNullOrWhiteSpace(key))
             {
                 key = "";
             }
+            //查普通的博客
             Expression<Func<BlogArticle, bool>> whereExpression;
             if (!string.IsNullOrWhiteSpace(bcategory))
             {
-                whereExpression = a => (a.bcategory == bcategory && a.IsDeleted == false) && ((a.btitle != null && a.btitle.Contains(key)) || (a.bcontent != null && a.bcontent.Contains(key)));
+                whereExpression = a => (a.bcategory == bcategory && a.IsDeleted == false && (a.isTop == null || a.isTop == false)) && ((a.btitle != null && a.btitle.Contains(key)) || (a.bcontent != null && a.bcontent.Contains(key)));
             }
             else
             {
-                whereExpression = a => (a.IsDeleted == false) && ((a.btitle != null && a.btitle.Contains(key)) || (a.bcontent != null && a.bcontent.Contains(key)));
+                whereExpression = a => (a.IsDeleted == false) && (a.isTop == null || a.isTop == false) && ((a.btitle != null && a.btitle.Contains(key)) || (a.bcontent != null && a.bcontent.Contains(key)));
             }
 
             var pageModelBlog = await _blogArticleServices.QueryPage(whereExpression, page, pageSize, " bID desc ");
+            //首页查询置顶博客
+            if(page == 1)//第一页
+            {
+                whereExpression = a => (a.IsDeleted == false) && (a.isTop != null && a.isTop == true) && ((a.btitle != null && a.btitle.Contains(key)) || (a.bcontent != null && a.bcontent.Contains(key)));
 
+                var topBlog = await _blogArticleServices.Query(whereExpression);
+                pageModelBlog.data = topBlog.Concat(pageModelBlog.data).ToList();
+            }
             using (MiniProfiler.Current.Step("获取成功后，开始处理最终数据"))
             {
                 foreach (var item in pageModelBlog.data)

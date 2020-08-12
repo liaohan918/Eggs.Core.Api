@@ -130,6 +130,11 @@
             备注
             </summary>
         </member>
+        <member name="P:Eggs.Core.Api.Model.Models.BlogArticle.isTop">
+            <summary>
+            是否置顶
+            </summary>
+        </member>
         <member name="P:Eggs.Core.Api.Model.Models.BlogArticle.IsDeleted">
             <summary>
             逻辑删除

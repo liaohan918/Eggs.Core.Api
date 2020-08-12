@@ -64,6 +64,12 @@ namespace Eggs.Core.Api.Model.Models
         public string bRemark { get; set; }
 
         /// <summary>
+        /// 是否置顶
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public bool? isTop { get; set; }
+
+        /// <summary>
         /// 逻辑删除
         /// </summary>
         [SugarColumn(IsNullable = true)]
